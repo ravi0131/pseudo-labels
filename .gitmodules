@@ -1,0 +1,6 @@
+[submodule "ge_av2"]
+	path = ge_av2
+	url = git@github.com:ravi0131/ground-estimator.git
+[submodule "bboxer_av2"]
+	path = bboxer_av2
+	url = git@github.com:ravi0131/bboxer.git
