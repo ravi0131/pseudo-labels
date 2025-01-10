@@ -23,7 +23,7 @@ def save_bboxes_to_feather(rects_modest, savepath, frame_id, logger):
     Args:
         rects_modest (list of dict): List of dictionaries containing bounding box data.
         savepath (str): Path to save the .feather file.
-        frame_id (int): Frame ID.
+        frame_id (int): {Frame ID}.feather
         logger (logging.Logger): Logger object.
     """
     data = {
@@ -36,7 +36,7 @@ def save_bboxes_to_feather(rects_modest, savepath, frame_id, logger):
     
     df = pd.DataFrame(data)
     logger.info(f"Dataframe size before saving: {df.shape}")
-    save_path = os.path.join(savepath, f"{frame_id}_boxes.feather")
+    save_path = os.path.join(savepath, frame_id)
     df.to_feather(save_path)
 
 def process_frame(frame: str, scene_path: str, output_dir: str, logger: logging.Logger):
@@ -49,30 +49,30 @@ def process_frame(frame: str, scene_path: str, output_dir: str, logger: logging.
         logger (logging.Logger): Logger object.
     """
     try:
-        frame_path = os.path.join(scene_path, frame)
-        if os.path.isdir(frame_path):
-            save_dir = os.path.join(output_dir, os.path.basename(scene_path))
-            os.makedirs(save_dir, exist_ok=True)
-            
-            non_ground_file = os.path.join(frame_path, 'non_ground.feather')
-            non_ground_points = pd.read_feather(non_ground_file)
-            
-            bbox_estimator = bboxer.Bboxer()
-            bbox_estimator.cluster(non_ground_points.to_numpy()[:, :2])
-            rects = bbox_estimator.estimate_bboxes_from_clusters_modest(
-                bbox_estimator.clustered_points,
-                bbox_estimator.clustered_labels, 
-                'closeness_to_edge'
-            )
-            
-            logger.info(f"Processing frame {frame}: Found {len(rects)} bounding boxes")
-            
-            if os.access(save_dir, os.W_OK):
-                save_bboxes_to_feather(rects, save_dir, frame, logger)
-            else:
-                logger.error(f"Cannot write to directory {save_dir}")
-            
-            return frame
+        frame_path = os.path.join(scene_path, frame) # test_ge_script/scene_id/frame_id.feather
+        
+        save_dir = os.path.join(output_dir, os.path.basename(scene_path)) # test_bbox_script/scene_id
+        os.makedirs(save_dir, exist_ok=True)
+        
+        # non_ground_file = os.path.join(frame_path, 'non_ground.feather')
+        non_ground_points = pd.read_feather(frame_path)
+        
+        bbox_estimator = bboxer.Bboxer()
+        bbox_estimator.cluster(non_ground_points.to_numpy()[:, :2])
+        rects = bbox_estimator.estimate_bboxes_from_clusters_modest(
+            bbox_estimator.clustered_points,
+            bbox_estimator.clustered_labels, 
+            'closeness_to_edge'
+        )
+        
+        logger.info(f"Processing frame {frame}: Found {len(rects)} bounding boxes")
+        
+        if os.access(save_dir, os.W_OK):
+            save_bboxes_to_feather(rects, save_dir, frame, logger)
+        else:
+            logger.error(f"Cannot write to directory {save_dir}")
+        
+        return frame
     except Exception as e:
         logger.error(f"Error processing frame {frame}: {str(e)}")
         return None
@@ -118,6 +118,8 @@ def main():
         for scene in os.listdir(ge_data_dir)
     ]
     
+    scene_count = 10 # CONFIG PARAMETER: Number of scenes to process
+    scene_tuples = scene_tuples[:scene_count]
     # Process scenes in parallel with non-daemon processes
     with Pool(processes=max(1, cpu_count() - 1), maxtasksperchild=1) as pool:
         scene_frame_list = pool.map(process_scene, scene_tuples)

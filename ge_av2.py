@@ -9,22 +9,20 @@ from pathlib import Path
 import multiprocessing as mp
 from functools import partial
 import time  # Import time module
-
+from config import CONFIG
 def process_frame(frame_path, output_dir, scene_id, dataset_path):
-    frame_dir = os.path.join(output_dir, scene_id, frame_path.stem)
-    os.makedirs(frame_dir, exist_ok=True)
+    # frame_dir = os.path.join(output_dir, scene_id, f"{frame_path.stem}.feather")
+    # os.makedirs(frame_dir, exist_ok=True)
 
     lidar_frame = sweep.Sweep.from_feather(frame_path)
-    points_roi = utils.filter_points_in_ROI(lidar_frame.xyz, x_range=(0, 40), y_range=(-20, 20))
-    ground, non_ground, _ = ground_exorciser.remove_ground(lidar_frame.xyz, points_roi)
-
-    # Save ground points
-    ground_path = os.path.join(frame_dir, 'ground.feather')
-    ground_df = pd.DataFrame(ground, columns=['x', 'y', 'z'])
-    ground_df.to_feather(ground_path)
+    if CONFIG['ROI']:
+        points_roi = utils.filter_points_in_ROI(lidar_frame.xyz, **CONFIG['GE_RANGE'])
+    # points_roi = utils.filter_points_in_ROI(lidar_frame.xyz, x_range=(0, 40), y_range=(-20, 20))
+    points_roi = lidar_frame.xyz
+    _, non_ground, _ = ground_exorciser.remove_ground(lidar_frame.xyz, points_roi)
 
     # Save non-ground points
-    non_ground_path = os.path.join(frame_dir, 'non_ground.feather')
+    non_ground_path = os.path.join(output_dir, scene_id, f"{frame_path.stem}.feather")
     non_ground_df = pd.DataFrame(non_ground, columns=['x', 'y', 'z'])
     non_ground_df.to_feather(non_ground_path)
 
@@ -58,6 +56,8 @@ def main():
     # Initialize dataset and get scene IDs
     dataset = AV2SensorDataLoader(data_dir=dataset_path, labels_dir=dataset_path)
     scene_ids = dataset.get_log_ids()
+    scene_count = 10  # CONFIG PARAMETER: Number of scenes to process
+    scene_ids = scene_ids[:scene_count]
     print(f"Processing {len(scene_ids)} scenes")
 
     # Process each scene
