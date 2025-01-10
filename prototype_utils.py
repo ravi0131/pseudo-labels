@@ -2,6 +2,7 @@ import open3d as o3d
 import numpy as np
 import matplotlib.pyplot as plt
 from typing import Tuple, List
+import pandas as pd
 
 def visualize_point_cloud(velo):
     """
@@ -178,4 +179,44 @@ def plot_point_cloud_and_bboxes(points: np.ndarray, bboxes: np.ndarray, fig_size
     plt.legend(loc='upper right')
     plt.grid(True)
     plt.axis('equal')  # Maintain aspect ratio
+    plt.show()
+    
+def bboxes_df_to_numpy_corners(bboxes_df: pd.DataFrame) -> np.ndarray:
+    """
+    Convert a DataFrame of bounding box parameters to a numpy array of corner coordinates.
+    
+    Args:
+        bboxes_df: A DataFrame containing bounding box parameters.
+        
+    Returns:
+        corners: A numpy array of shape (N, 4, 2) containing the corner coordinates of each bounding box.
+    """
+    bboxes_lst = []
+    for idx, row in bboxes_df.iterrows():
+        corners = get_bbox_corners((row['box_center_x'],
+                                row['box_center_y'],
+                                row['box_length'],
+                                row['box_width'],
+                                row['ry']))
+        bboxes_lst.append(corners)
+
+    return np.array(bboxes_lst)
+
+
+def plot_aspect_ratio_vs_area(df, aspect_ratio_col, area_col, title="Scatter Plot of Aspect Ratio vs Area"):
+    """
+    Plots a scatter plot of aspect ratio vs area.
+
+    Args:
+        df (pd.DataFrame): The DataFrame containing aspect ratio and area.
+        aspect_ratio_col (str): The column name for aspect ratios in the DataFrame.
+        area_col (str): The column name for areas in the DataFrame.
+        title (str): The title of the scatter plot.
+    """
+    plt.figure(figsize=(8, 6))
+    plt.scatter(df[aspect_ratio_col], df[area_col], alpha=0.7, edgecolor='k')
+    plt.title(title, fontsize=14)
+    plt.xlabel('Aspect Ratio', fontsize=12)
+    plt.ylabel('Area', fontsize=12)
+    plt.grid(True)
     plt.show()
