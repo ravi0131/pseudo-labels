@@ -122,6 +122,37 @@ def compute_matches(gt_boxes: np.ndarray, #label_list
 
     return gt_match, pred_match, overlaps
 
+def reorder_by_iou(pred_match: np.ndarray, overlaps: np.ndarray) -> np.ndarray:
+    """
+    Reorders pred_match array such that predictions are sorted by descending IoU.
+
+    Args:
+        pred_match: 1-D array. For each predicted box, it has the index of
+                    the matched ground truth box (-1 if unmatched).
+        overlaps: 2-D array. IoU values between predicted and ground truth boxes.
+
+    Returns:
+        reordered_pred_match: 1-D array. Reordered pred_match.
+    """
+    # Initialize an array to store IoU values
+    iou_values = np.zeros(len(pred_match))
+
+    # Loop through each prediction
+    for i in range(len(pred_match)):
+        if pred_match[i] > -1:  # If the prediction is matched
+            iou_values[i] = overlaps[i, int(pred_match[i])]
+        else:  # If the prediction is unmatched
+            iou_values[i] = 0
+
+    # Sort indices by descending IoU
+    sorted_indices = np.argsort(iou_values)[::-1]
+
+    # Reorder pred_match based on the sorted indices
+    reordered_pred_match = pred_match[sorted_indices]
+
+    return reordered_pred_match
+
+
 def compute_ap(pred_match: np.ndarray, num_gt: int, num_pred: int):
     """ Compute Average Precision at a set IoU threshold (default 0.5).
 
@@ -152,7 +183,7 @@ def compute_ap2(pred_match: np.ndarray, num_gt: int, num_pred: int) -> Tuple:
             precision: precision value
             recall: recall value
     """
-    print(f"METHOD: compute_ap was called")
+    # print(f"METHOD: compute_ap was called")
     assert num_gt != 0
     # assert num_pred != 0
     

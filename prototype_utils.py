@@ -1,7 +1,7 @@
 import open3d as o3d
 import numpy as np
 import matplotlib.pyplot as plt
-from typing import Tuple, List
+from typing import Tuple, List, Dict
 import pandas as pd
 
 def visualize_point_cloud(velo):
@@ -220,3 +220,62 @@ def plot_aspect_ratio_vs_area(df, aspect_ratio_col, area_col, title="Scatter Plo
     plt.ylabel('Area', fontsize=12)
     plt.grid(True)
     plt.show()
+    
+    
+def extract_face_corners(cuboids: np.ndarray, bottom_face=True):
+    """
+    Extract corner coordinates of top or bottom face from cuboids.
+    
+    Args:
+        cuboids: numpy array of shape (N, 8, 3) containing cuboid corner coordinates
+        bottom_face: bool, if True return bottom face corners, else top face corners
+    
+    Returns:
+        numpy array of shape (N, 4, 2) containing x,y coordinates of face corners
+        
+            5------4
+            |\\    |\\
+            | \\   | \\
+            6--\\--7  \\
+            \\  \\  \\ \\
+        l    \\  1-------0    h
+        e    \\ ||   \\ ||   e
+        n    \\||    \\||   i
+        g    \\2------3    g
+            t      width.     h
+            h.               t
+    """
+    # Select indices for bottom or top face
+    face_index = [0, 1, 5, 4] if bottom_face else [3, 2, 6, 7]
+    
+    # Extract corners for selected face (x,y coordinates only)
+    face_corners = cuboids[:, face_index, :2]
+    
+    return face_corners
+
+def filter_cuboids_by_roi(corners: np.ndarray, config: Dict) -> np.ndarray:
+    """
+    Filter cuboids based on whether they fall within specified ROI.
+
+    Args:
+        corners: numpy array of shape (N, 4, 2) containing corner coordinates
+        x_range: tuple of (min_x, max_x) defining ROI x bounds (0,70)
+        y_range: tuple of (min_y, max_y) defining ROI y bounds  (-40,40)
+
+    Returns:
+        numpy array containing only cuboids that fall within ROI
+    """
+    
+    x_min, x_max = config['GT_LABELS_ROI']['x_range']
+    y_min, y_max = config['GT_LABELS_ROI']['y_range']
+    
+    filtered_cuboids = []
+    for cuboid in corners:
+        # Check if any corner falls within ROI
+        if np.any((cuboid[:, 0] >= x_min) & 
+                (cuboid[:, 0] <= x_max) & 
+                (cuboid[:, 1] >= y_min) & 
+                (cuboid[:, 1] <= y_max)):
+            filtered_cuboids.append(cuboid)
+    
+    return np.array(filtered_cuboids)

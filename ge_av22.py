@@ -147,8 +147,13 @@ def main():
     start_time = time.time()
 
     # Setup paths
-    dataset_path = Path(os.path.join(os.path.expanduser("~"), "buni", "dataset", "av2", "train"))
-    output_dir = os.path.join(os.path.expanduser("~"), 'buni', 'output-data', 'av2', CONFIG['GE_EXPORT_DIR'])
+    #NOTE: Change the base path as needed
+    home = os.path.join(os.path.expanduser("~"), CONFIG['HOME_PATH'][CONFIG['OS']])
+    dataset_path = Path(os.path.join(home, *CONFIG['AV2_DATASET_PATH']))
+    if CONFIG['ROI']:
+        output_dir = os.path.join(home, *CONFIG['GROUND_ESTIMATION_FILE_PATHS']['ROI'])
+    else:
+        output_dir = os.path.join(home, *CONFIG['GROUND_ESTIMATION_FILE_PATHS']['FULL_RANGE'])
     os.makedirs(output_dir, exist_ok=True)
 
     # Directory for all logs (master log + scene logs)

@@ -48,9 +48,14 @@ def main():
     # Record the start time
     start_time = time.time()
 
-    # Setup paths
-    dataset_path = Path(os.path.join(os.path.expanduser("~"), "buni", "dataset", "av2", "train"))
-    output_dir = os.path.join(os.path.expanduser("~"), 'buni', 'output-data', 'av2', 'test_ge_script')
+        # Setup paths
+    #NOTE: Change the base path as needed
+    home = os.path.join(os.path.expanduser("~"), CONFIG['HOME_PATH'][CONFIG['OS']])
+    dataset_path = Path(os.path.join(home, *CONFIG['AV2_DATASET_PATH']))
+    if CONFIG['ROI']:
+        output_dir = os.path.join(home, *CONFIG['GROUND_ESTIMATION_FILE_PATHS']['ROI'])
+    else:
+        output_dir = os.path.join(home, *CONFIG['GROUND_ESTIMATION_FILE_PATHS']['FULL_RANGE'])
     os.makedirs(output_dir, exist_ok=True)
 
     # Initialize dataset and get scene IDs

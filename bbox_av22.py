@@ -132,9 +132,14 @@ def main():
     # Master logger logs high-level info only
     master_logger = get_main_logger(script_name)
     
-    home = os.path.expanduser("~")
-    ge_data_dir = os.path.join(home, 'buni', 'output-data', 'av2', 'test_ge_script')
-    output_dir = os.path.join(home, 'buni', 'output-data', 'av2', 'test_bbox_script')
+    home = os.path.join(os.path.expanduser("~"), CONFIG['HOME_PATH'][CONFIG['OS']])
+    #NOTE: Change the base path as needed
+    if CONFIG['ROI']:
+        ge_data_dir = os.path.join(home, *CONFIG['GROUND_ESTIMATION_FILE_PATHS']['ROI'])
+        output_dir = os.path.join(home, *CONFIG['BBOX_FILE_PATHS']['ROI'])
+    else:
+        ge_data_dir = os.path.join(home, *CONFIG['GROUND_ESTIMATION_FILE_PATHS']['FULL_RANGE'])
+        output_dir = os.path.join(home, *CONFIG['BBOX_FILE_PATHS']['FULL_RANGE'])
     
     start_time = time.time()
     
