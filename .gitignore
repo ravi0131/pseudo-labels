@@ -1,3 +1,4 @@
 *_logs/
 __pycache__/
 *.feather
+bbox_img_data

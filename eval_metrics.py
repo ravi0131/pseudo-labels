@@ -209,7 +209,7 @@ def compute_ap2(pred_match: np.ndarray, num_gt: int, num_pred: int) -> Tuple:
 
     # Ensure precision values decrease but don't increase. This way, the
     # precision value at each recall threshold is the maximum it can be
-    # for all following recall thresholds, as specified by the VOC paper.
+    # for all following recall thresholds.
     for i in range(len(precisions) - 2, -1, -1):
         precisions[i] = np.maximum(precisions[i], precisions[i + 1])
 

@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from typing import Tuple, List, Dict
 import pandas as pd
-
+from av2.structures.cuboid import CuboidList
 def visualize_point_cloud(velo):
     """
     Helper method to visualize a point cloud using open3d
@@ -279,3 +279,23 @@ def filter_cuboids_by_roi(corners: np.ndarray, config: Dict) -> np.ndarray:
             filtered_cuboids.append(cuboid)
     
     return np.array(filtered_cuboids)
+
+def filter_gt_labels_by_category(gt_labels: CuboidList, config: Dict) -> CuboidList:
+    """
+    Filters out ground truth labels based on specified categories in config
+    
+    Args:
+        gt_labels: CuboidList containing ground truth labels
+        config: Dictionary containing configuration parameters
+    
+    Returns:
+        CuboidList containing only ground truth labels with specified categories
+    """
+    relevant_cuboids = []
+    for idx, cuboid in enumerate(gt_labels):
+        if cuboid.category in config['GT_CATEGORIES']:
+            relevant_cuboids.append(cuboid)
+    
+    relevant_cuboid_lst = CuboidList(relevant_cuboids)
+    
+    return relevant_cuboid_lst

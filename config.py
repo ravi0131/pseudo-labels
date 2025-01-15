@@ -3,6 +3,11 @@ CONFIG = {
     "SCENE_COUNT": 10,
     "OS": "WINDOWS", # "LINUX" or "WINDOWS"
     
+    "HOME_PATH":{
+        "WINDOWS": "buni", 
+        "LINUX": ""
+    },
+    
     "GE_RANGE": {
         "x_range": (0, 40),
         "y_range": (-20, 20)
@@ -14,10 +19,7 @@ CONFIG = {
     
     "AV2_DATASET_PATH": ["dataset", "av2", "train"],
     
-    "HOME_PATH":{
-        "WINDOWS": "buni", 
-        "LINUX": ""
-    },
+    
     
     "GROUND_ESTIMATION_FILE_PATHS":{
         "ROI": ["output-data", "av2", "ground_estimation", "roi"],
@@ -45,6 +47,25 @@ CONFIG = {
             }
     },
     
+    "GRID_SEARCH_RECT":{
+        "PATH":{
+            "ROI":["output-data", "av2", "grid_search", "roi", "rect_filter"],
+            "FULL_RANGE": ["output-data", "av2", "grid_search", "full_range", "rect_filter"],
+        },
+        "AR_THRESHOLD_BASE_DIR_NAME": "ar_threshold",
+        "AREA_THRESHOLD_BASE_DIR_NAME": "area_threshold",
+        
+        "ASPECT_RATIO": {
+            "RANGE":[0.1, 1],
+            "STEP": 0.1,    
+        },
+        "AREA": {
+            "RANGE":[10, 200],
+            "STEP": 10,
+        },
+    
+    },
+    
     "ASPECT_RATIO_FILTER": {
         "min_ratio": 0.3,
         "max_ratio": 1.0
@@ -57,5 +78,17 @@ CONFIG = {
         "max_aspect_ratio": 0.6,
         "max_area": 50
     },
-     "NMS_IOU_THRESHOLD": 0.1,
+     "NMS_IOU_THRESHOLD": 0.1, 
+
+    "GT_CATEGORIES":[
+        "REGULAR_VEHICLE",
+        "LARGE_VEHICLE",
+        "BUS",
+        "TRUCK",
+        "VEHICULAR_TRAILER",
+        "TRUCK_CAB",
+        "SCHOOL_BUS",
+        "ARTICULATED_BUS",
+        "RAILED_VEHICLE",   
+    ]
 }
