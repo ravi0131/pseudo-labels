@@ -52,8 +52,8 @@ CONFIG = {
             "STEP": 0.1,
         },
         "AREA": {
-            "RANGE": [10, 100],
-            "STEP": 10,
+            "RANGE": [0, 20],
+            "STEP": 2,
         },
     },
     
