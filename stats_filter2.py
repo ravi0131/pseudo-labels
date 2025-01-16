@@ -32,3 +32,31 @@ def apply_rect_filter(df, aspect_ratio_col, area_col, max_ratio, max_area):
     return narrow_boxes, other_boxes
 
 
+def apply_large_sq_filter(df, aspect_ratio_col, area_col, min_ratio, min_area):
+    """
+    Filters bounding boxes to identify large squares based on a single condition.
+
+    Args:
+        df (pd.DataFrame): DataFrame containing bounding box information.
+        aspect_ratio_col (str): Column name for aspect ratios in the DataFrame.
+        area_col (str): Column name for areas in the DataFrame.
+        min_ratio (float): Minimum aspect ratio tolerance (ε).
+        min_area (float): Minimum area for large squares (T_LargeArea).
+
+    Returns:
+        tuple: (large_squares, rest_boxes)
+            - large_squares (pd.DataFrame): Subset of the DataFrame containing bounding boxes classified as large squares.
+            - rest_boxes (pd.DataFrame): Subset of the DataFrame containing all other bounding boxes.
+    """
+    # Create a single mask for large squares
+    large_square_mask = (df[aspect_ratio_col] >= min_ratio) & (df[aspect_ratio_col] <= 1.0) & (df[area_col] > min_area)
+
+    # Apply the mask to separate large squares and other rectangles
+    large_squares = df[large_square_mask]
+    rest_boxes = df[~large_square_mask]  # Complement of the large square mask
+
+    # Reset the indices for both DataFrames
+    large_squares.reset_index(drop=True, inplace=True)
+    rest_boxes.reset_index(drop=True, inplace=True)
+
+    return large_squares, rest_boxes
