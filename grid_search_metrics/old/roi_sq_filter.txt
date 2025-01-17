@@ -1,0 +1,48 @@
+Filter type: square_filter and roi: True
+
+--- Results for IoU = 0.3 ---
+
+Best mAP:
+  AR dir:    ar_threshold_0.6
+  AREA dir:  area_threshold_50
+  mAP:       0.0837
+  Precision: 0.0655
+  Recall:    0.6354
+
+Best Precision:
+  AR dir:    ar_threshold_0.5
+  AREA dir:  area_threshold_30
+  mAP:       0.0830
+  Precision: 0.0661
+  Recall:    0.6321
+
+Best Recall:
+  AR dir:    ar_threshold_0.7
+  AREA dir:  area_threshold_80
+  mAP:       0.0822
+  Precision: 0.0651
+  Recall:    0.6354
+
+
+--- Results for IoU = 0.5 ---
+
+Best mAP:
+  AR dir:    ar_threshold_0.5
+  AREA dir:  area_threshold_30
+  mAP:       0.0506
+  Precision: 0.0451
+  Recall:    0.4215
+
+Best Precision:
+  AR dir:    ar_threshold_0.5
+  AREA dir:  area_threshold_20
+  mAP:       0.0501
+  Precision: 0.0455
+  Recall:    0.4211
+
+Best Recall:
+  AR dir:    ar_threshold_0.7
+  AREA dir:  area_threshold_80
+  mAP:       0.0493
+  Precision: 0.0443
+  Recall:    0.4216

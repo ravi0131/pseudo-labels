@@ -5,7 +5,8 @@ from stats_filter2 import apply_large_sq_filter
 import numpy as np
 import logging
 from concurrent.futures import ProcessPoolExecutor
-
+from prototype_utils import bboxes_df_to_numpy_corners
+from stats_filter import apply_nms_on_pseudo_labels
 
 # Set up logging directories
 def setup_logger(name, log_file, level=logging.INFO):
@@ -32,9 +33,18 @@ def process_frame(scene_path, frame, aspect_ratio, area, ar_dir_name, area_dir_n
 
         save_path = os.path.join(base_save_path, ar_dir_name, area_dir_name, os.path.basename(scene_path), frame_id)
         os.makedirs(save_path, exist_ok=True)
-
-        large_squares_df.to_feather(os.path.join(save_path, "large_squares.feather"))
-        rest_boxes_df.to_feather(os.path.join(save_path, "rest_boxes.feather"))
+        
+        #apply nms
+        _, large_selected_idxes = apply_nms_on_pseudo_labels(bboxes_df_to_numpy_corners(large_squares_df), CONFIG['NMS_IOU_THRESHOLD'])
+        large_squares_nms_df = large_squares_df.iloc[large_selected_idxes]
+        large_squares_nms_df.reset_index(drop=True, inplace=True)
+        
+        _, rest_selected_idxes = apply_nms_on_pseudo_labels(bboxes_df_to_numpy_corners(rest_boxes_df), CONFIG['NMS_IOU_THRESHOLD'])
+        rest_boxes_nms_df = rest_boxes_df.iloc[rest_selected_idxes]
+        rest_boxes_nms_df.reset_index(drop=True, inplace=True)
+        
+        large_squares_nms_df.to_feather(os.path.join(save_path, "large_squares.feather"))
+        rest_boxes_nms_df.to_feather(os.path.join(save_path, "rest_boxes.feather"))
         task_logger.info(f"Frame processed and saved to: {save_path}")
     except Exception as e:
         task_logger.error(f"Error processing frame: {frame_path}. Error: {str(e)}")
@@ -90,6 +100,7 @@ def main():
     main_logger = setup_logger("Main", main_log_file)
 
     main_logger.info("Starting main process...")
+    main_logger.info(f"ROI: {CONFIG['ROI']}")
     try:
         home = os.path.join(os.path.expanduser("~"), CONFIG['HOME_PATH'][CONFIG['OS']])
         if CONFIG['ROI']:

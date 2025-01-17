@@ -1,8 +1,15 @@
 CONFIG = {
     "ROI": True,
     "SCENE_COUNT": 10,
-    "OS": "WINDOWS",  # "LINUX" or "WINDOWS"
+    "OS": "LINUX",  # "LINUX" or "WINDOWS"
     "HOME_PATH": {"WINDOWS": "buni", "LINUX": ""},
+    # To calculate the metrics for grid_search, change the following values
+    # 'LABEL_TYPE: positive' means we want to read boxes that remain after the filter has been applied
+    # 'LABEL_TYPE: negative' means that we want to read boxes that were filtered out by the filter
+    "GRID_SEARCH_METRICS_MODE": {
+      "FILTER": "square_filter", # 'rect_filter' or 'square_filter'
+      "LABEL_TYPE": "positive",  # 'positive' or 'negative'
+    },
     
     "GE_RANGE": {"x_range": (0, 40), "y_range": (-20, 20)},
     "GT_LABELS_ROI": {"x_range": (0, 40), "y_range": (-20, 20)},
@@ -93,12 +100,50 @@ CONFIG = {
         "AREA_THRESHOLD_BASE_DIR_NAME": "area_threshold",
     },
     
-    # To calculate the metrics for grid_search, change the following values
-    # 'LABEL_TYPE: positive' means we want to read boxes that remain after the filter has been applied
-    # 'LABEL_TYPE: negative' means that we want to read boxes that were filtered out by the filter
-    "GRID_SEARCH_METRICS_MODE": {
-      "FILTER": "rect_filter", # 'rect_filter' or 'square_filter'
-      "LABEL_TYPE": "positive",  # 'positive' or 'negative'
+    "RECT_FILTER_THRESHOLDS":{
+        "ROI": {
+            "IOU_THRESHOLD_0.3":{
+                "MAX_RATIO": 0.9,
+                "MAX_AREA": 40,   
+            },
+            "IOU_THRESHOLD_0.5":{
+                "MAX_RATIO": 0.9,
+                "MAX_AREA": 40,
+            },
+        },
+        "FULL_RANGE": {
+            "IOU_THRESHOLD_0.3":{
+                "MAX_RATIO": 0.5,
+                "MAX_AREA": 40,
+            },
+            "IOU_THRESHOLD_0.5":{
+                "MAX_RATIO": 0.5,
+                "MAX_AREA": 40,
+            },
+        }
+    },
+    
+    "SQUARE_FILTER_THRESHOLDS":{
+        "ROI": {
+            "IOU_THRESHOLD_0.3":{
+                "MIN_RATIO": 0.6,
+                "MIN_AREA": 50,
+            },
+            "IOU_THRESHOLD_0.5":{
+                "MIN_RATIO": 0.5,
+                "MIN_AREA": 30,
+            },
+        },
+        "FULL_RANGE": {
+            "IOU_THRESHOLD_0.3":{
+                "MIN_RATIO": 0.6,
+                "MIN_AREA": 50,
+            },
+            "IOU_THRESHOLD_0.5":{
+                "MIN_RATIO": 0.6,
+                "MIN_AREA": 30,
+            },
+        }
     },
     
     "ASPECT_RATIO_FILTER": {"min_ratio": 0.3, "max_ratio": 1.0},

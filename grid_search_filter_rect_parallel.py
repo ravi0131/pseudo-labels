@@ -6,7 +6,8 @@ import os
 import logging
 from concurrent.futures import ProcessPoolExecutor
 from functools import partial
-
+from stats_filter import apply_nms_on_pseudo_labels
+from prototype_utils import bboxes_df_to_numpy_corners
 
 # Set up logging directories
 def setup_logger(name, log_file, level=logging.INFO):
@@ -33,9 +34,17 @@ def process_frame(scene_path, frame, aspect_ratio, area, ar_dir_name, area_dir_n
 
         save_path = os.path.join(base_save_path, ar_dir_name, area_dir_name, os.path.basename(scene_path), frame_id)
         os.makedirs(save_path, exist_ok=True)
-
-        narrow_boxes_df.to_feather(os.path.join(save_path, "narrow_boxes.feather"))
-        other_boxes_df.to_feather(os.path.join(save_path, "other_boxes.feather"))
+        #apply nms
+        _, narrow_selected_idxes = apply_nms_on_pseudo_labels(bboxes_df_to_numpy_corners(narrow_boxes_df), CONFIG['NMS_IOU_THRESHOLD'])
+        narrow_nms_df = narrow_boxes_df.iloc[narrow_selected_idxes]
+        narrow_nms_df.reset_index(drop=True, inplace=True)
+        
+        _, other_selected_idxes = apply_nms_on_pseudo_labels(bboxes_df_to_numpy_corners(other_boxes_df), CONFIG['NMS_IOU_THRESHOLD'])
+        other_nms_df = other_boxes_df.iloc[other_selected_idxes]
+        other_boxes_df.reset_index(drop=True, inplace=True)
+        
+        narrow_nms_df.to_feather(os.path.join(save_path, "narrow_boxes.feather"))
+        other_nms_df.to_feather(os.path.join(save_path, "other_boxes.feather"))
         task_logger.info(f"Frame processed and saved to: {save_path}")
     except Exception as e:
         task_logger.error(f"Error processing frame: {frame_path}. Error: {str(e)}")
@@ -89,6 +98,7 @@ def main():
     main_logger = setup_logger("Main", main_log_file)
 
     main_logger.info("Starting main process...")
+    main_logger.info(f"ROI: {CONFIG['ROI']}")
     try:
         home = os.path.join(os.path.expanduser("~"), CONFIG['HOME_PATH'][CONFIG['OS']])
         if CONFIG['ROI']:
