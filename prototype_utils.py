@@ -148,7 +148,7 @@ def get_bbox_corners(params: Tuple) -> np.ndarray:
     global_corners = (rotation_matrix @ local_corners.T).T + np.array([cx, cy])
     return global_corners
 
-def plot_point_cloud_and_bboxes(points: np.ndarray, bboxes: np.ndarray, fig_size= (10, 10)):
+def plot_point_cloud_and_bboxes(points: np.ndarray, bboxes: np.ndarray, fig_size= (10, 10), title='Bird\'s Eye View of Point Cloud and Bounding Boxes'):
     """
     Plots a 2D bird's eye view (BEV) of a point cloud and bounding boxes.
 
@@ -175,7 +175,7 @@ def plot_point_cloud_and_bboxes(points: np.ndarray, bboxes: np.ndarray, fig_size
     # Add labels, legends, and grid
     plt.xlabel('X')
     plt.ylabel('Y')
-    plt.title('Bird\'s Eye View of Point Cloud and Bounding Boxes')
+    plt.title(title)
     plt.legend(loc='upper right')
     plt.grid(True)
     plt.axis('equal')  # Maintain aspect ratio
