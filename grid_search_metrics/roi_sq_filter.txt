@@ -3,46 +3,46 @@ Filter type: square_filter, ROI=True
 --- Results for IoU = 0.3 ---
 
 Best mAP:
-  AR dir:    ar_threshold_0.6
-  AREA dir:  area_threshold_50
-  mAP:       0.0837
-  Precision: 0.0655
-  Recall:    0.6354
+  AR dir:    ar_threshold_0.5
+  AREA dir:  area_threshold_20
+  mAP:       0.0905
+  Precision: 0.0647
+  Recall:    0.5811
 
 Best Precision:
-  AR dir:    ar_threshold_0.5
-  AREA dir:  area_threshold_30
-  mAP:       0.0830
-  Precision: 0.0661
-  Recall:    0.6321
+  AR dir:    ar_threshold_0.8
+  AREA dir:  area_threshold_70
+  mAP:       0.0848
+  Precision: 0.0650
+  Recall:    0.6297
 
 Best Recall:
-  AR dir:    ar_threshold_0.6
-  AREA dir:  area_threshold_80
-  mAP:       0.0831
-  Precision: 0.0653
-  Recall:    0.6354
+  AR dir:    ar_threshold_0.9
+  AREA dir:  area_threshold_90
+  mAP:       0.0824
+  Precision: 0.0649
+  Recall:    0.6331
 
 
 --- Results for IoU = 0.5 ---
 
 Best mAP:
   AR dir:    ar_threshold_0.5
-  AREA dir:  area_threshold_30
-  mAP:       0.0506
-  Precision: 0.0451
-  Recall:    0.4215
+  AREA dir:  area_threshold_20
+  mAP:       0.0571
+  Precision: 0.0447
+  Recall:    0.3937
 
 Best Precision:
   AR dir:    ar_threshold_0.5
   AREA dir:  area_threshold_20
-  mAP:       0.0501
-  Precision: 0.0455
-  Recall:    0.4211
+  mAP:       0.0571
+  Precision: 0.0447
+  Recall:    0.3937
 
 Best Recall:
-  AR dir:    ar_threshold_0.7
-  AREA dir:  area_threshold_40
-  mAP:       0.0498
-  Precision: 0.0444
-  Recall:    0.4216
+  AR dir:    ar_threshold_0.9
+  AREA dir:  area_threshold_90
+  mAP:       0.0502
+  Precision: 0.0441
+  Recall:    0.4201

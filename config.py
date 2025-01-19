@@ -7,7 +7,7 @@ CONFIG = {
     # 'LABEL_TYPE: positive' means we want to read boxes that remain after the filter has been applied
     # 'LABEL_TYPE: negative' means that we want to read boxes that were filtered out by the filter
     "GRID_SEARCH_METRICS_MODE": {
-      "FILTER": "square_filter", # 'rect_filter' or 'square_filter'
+      "FILTER": "rect_filter", # 'rect_filter' or 'square_filter'
       "LABEL_TYPE": "positive",  # 'positive' or 'negative'
     },
     
@@ -103,12 +103,12 @@ CONFIG = {
     "RECT_FILTER_THRESHOLDS":{
         "ROI": {
             "IOU_THRESHOLD_0.3":{
-                "MAX_RATIO": 0.9,
-                "MAX_AREA": 40,   
+                "MAX_RATIO": 0.5,
+                "MAX_AREA": 4,   
             },
             "IOU_THRESHOLD_0.5":{
-                "MAX_RATIO": 0.9,
-                "MAX_AREA": 40,
+                "MAX_RATIO": 0.5,
+                "MAX_AREA": 4,
             },
         },
         "FULL_RANGE": {
@@ -126,8 +126,8 @@ CONFIG = {
     "SQUARE_FILTER_THRESHOLDS":{
         "ROI": {
             "IOU_THRESHOLD_0.3":{
-                "MIN_RATIO": 0.6,
-                "MIN_AREA": 50,
+                "MIN_RATIO": 0.5,
+                "MIN_AREA": 20,
             },
             "IOU_THRESHOLD_0.5":{
                 "MIN_RATIO": 0.5,

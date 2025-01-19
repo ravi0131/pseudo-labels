@@ -1,20 +1,18 @@
-Filter type: rect_filter, ROI=True
-
 --- Results for IoU = 0.3 ---
 
 Best mAP:
   AR dir:    ar_threshold_0.5
   AREA dir:  area_threshold_4
-  mAP:       0.1214
-  Precision: 0.1106
-  Recall:    0.6217
+  mAP:       0.1357
+  Precision: 0.1115
+  Recall:    0.6186
 
 Best Precision:
   AR dir:    ar_threshold_0.5
   AREA dir:  area_threshold_4
-  mAP:       0.1214
-  Precision: 0.1106
-  Recall:    0.6217
+  mAP:       0.1357
+  Precision: 0.1115
+  Recall:    0.6186
 
 Best Recall:
   AR dir:    ar_threshold_0.4
@@ -29,16 +27,16 @@ Best Recall:
 Best mAP:
   AR dir:    ar_threshold_0.5
   AREA dir:  area_threshold_4
-  mAP:       0.0734
-  Precision: 0.0767
-  Recall:    0.4215
+  mAP:       0.0852
+  Precision: 0.0773
+  Recall:    0.4186
 
 Best Precision:
   AR dir:    ar_threshold_0.5
   AREA dir:  area_threshold_4
-  mAP:       0.0734
-  Precision: 0.0767
-  Recall:    0.4215
+  mAP:       0.0852
+  Precision: 0.0773
+  Recall:    0.4186
 
 Best Recall:
   AR dir:    ar_threshold_0.4
